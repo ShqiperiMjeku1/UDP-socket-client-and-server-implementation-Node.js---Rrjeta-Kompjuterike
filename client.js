@@ -82,3 +82,26 @@ function handleUserInput(line) {
 
 
 rl.on("line", handleUserInput);
+
+// Mesazhet nga serveri
+clientSocket.on("message", (msg) => {
+  const text = msg.toString("utf8");
+
+
+  if (text.startsWith("FILEDATA ")) {
+    // format: FILEDATA filename base64...
+    const parts = text.split(" ");
+    const filename = parts[1];
+    const base64Data = parts.slice(2).join(" ");
+    const buffer = Buffer.from(base64Data, "base64");
+    fs.writeFile(filename, buffer, (err) => {
+      if (err) {
+        console.error("Gabim në ruajtjen e file-it:", err.message);
+      } else {
+        console.log(`✅ File ${filename} u shkarkua dhe u ruajt lokalisht.`);
+      }
+    });
+  } else {
+    console.log(`Server: \n${text}\n`);
+  }
+});
