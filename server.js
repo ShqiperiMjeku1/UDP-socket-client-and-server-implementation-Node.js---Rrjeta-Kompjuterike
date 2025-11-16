@@ -194,6 +194,8 @@ setInterval(() => {
   }
 }, 5_000);
 
+server.bind(SERVER_PORT);
+
 function printStats() {
   const lines = [];
   lines.push("===== SERVER STATS =====");
