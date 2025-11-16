@@ -1,17 +1,19 @@
-// fileService.js
 const fs = require("fs");
 const path = require("path");
 const { SHARED_FOLDER } = require("./config");
 
 
+// Sigurohu që shared/ ekziston
 if (!fs.existsSync(SHARED_FOLDER)) {
   fs.mkdirSync(SHARED_FOLDER, { recursive: true });
 }
+
 
 function listFiles() {
   const files = fs.readdirSync(SHARED_FOLDER);
   return files.join("\n") || "(s ka asnjë file)";
 }
+
 
 function readFileContent(filename) {
   const filePath = path.join(SHARED_FOLDER, filename);
@@ -22,12 +24,14 @@ function readFileContent(filename) {
   return data;
 }
 
+
 function saveUploadedFile(filename, base64Data) {
   const filePath = path.join(SHARED_FOLDER, filename);
   const buffer = Buffer.from(base64Data, "base64");
   fs.writeFileSync(filePath, buffer);
   return `OK: File ${filename} u ruajt në server`;
 }
+
 
 function getFileForDownload(filename) {
   const filePath = path.join(SHARED_FOLDER, filename);
@@ -39,6 +43,7 @@ function getFileForDownload(filename) {
   return { filename, base64 };
 }
 
+
 function deleteFile(filename) {
   const filePath = path.join(SHARED_FOLDER, filename);
   if (!fs.existsSync(filePath)) {
@@ -48,6 +53,7 @@ function deleteFile(filename) {
   return `OK: File ${filename} u fshi`;
 }
 
+
 function searchFiles(keyword) {
   const files = fs.readdirSync(SHARED_FOLDER);
   const matched = files.filter((f) => f.includes(keyword));
@@ -56,6 +62,7 @@ function searchFiles(keyword) {
   }
   return matched.join("\n");
 }
+
 
 function fileInfo(filename) {
   const filePath = path.join(SHARED_FOLDER, filename);
@@ -70,6 +77,7 @@ function fileInfo(filename) {
     `Modifikuar: ${stats.mtime}`
   );
 }
+
 
 module.exports = {
   listFiles,

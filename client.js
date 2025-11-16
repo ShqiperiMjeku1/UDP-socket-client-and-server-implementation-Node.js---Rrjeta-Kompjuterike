@@ -7,9 +7,6 @@ const { SERVER_PORT, SERVER_IP } = require("./config");
 
 const clientSocket = dgram.createSocket("udp4");
 
-
-// clientId dhe roli merren nga argumentet e komandës
-// shembull:  node client.js admin1 admin
 const clientId = process.argv[2] || "client1";
 const role = process.argv[3] || "read"; // "admin" ose "read"
 
@@ -98,7 +95,7 @@ clientSocket.on("message", (msg) => {
       if (err) {
         console.error("Gabim në ruajtjen e file-it:", err.message);
       } else {
-        console.log(`✅ File ${filename} u shkarkua dhe u ruajt lokalisht.`);
+        console.log(`File ${filename} u shkarkua dhe u ruajt lokalisht.`);
       }
     });
   } else {

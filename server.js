@@ -178,7 +178,7 @@ server.on("message", (msg, rinfo) => {
 
 server.on("listening", () => {
   const address = server.address();
-  console.log(`✅ UDP server duke dëgjuar në port ${address.port}`);
+  console.log(`UDP server duke dëgjuar në port ${address.port}`);
   console.log(`Përdor komandën "STATS" në këtë terminal për statistika.\n`);
 });
 
@@ -187,7 +187,7 @@ setInterval(() => {
   for (const [key, client] of clients.entries()) {
     if (now - client.lastSeen > CLIENT_TIMEOUT_MS) {
       console.log(
-        `⚠️ Lidhja me klientin ${client.id} (${client.address}:${client.port}) u mbyll për shkak të mosaktivitetit.`
+        `Lidhja me klientin ${client.id} (${client.address}:${client.port}) u mbyll për shkak të mosaktivitetit.`
       );
       clients.delete(key);
     }

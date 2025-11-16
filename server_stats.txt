@@ -1,0 +1,18 @@
+===== SERVER STATS =====
+Koha: 2025-11-16T20:35:42.094Z
+Lidhje aktive: 0
+Total mesazhe: 0
+Bytes pranuar: 0
+Bytes dërguar: 0
+Klientët aktivë:
+
+===== SERVER STATS =====
+Koha: 2025-11-16T21:08:08.062Z
+Lidhje aktive: 2
+Total mesazhe: 9
+Bytes pranuar: 275
+Bytes dërguar: 278
+Klientët aktivë:
+- id=user1, role=read, ip=127.0.0.1, msg=4, in=101, out=141
+- id=admin1, role=admin, ip=127.0.0.1, msg=2, in=66, out=65
+
