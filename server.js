@@ -131,3 +131,15 @@ function handleCommand(client, commandLine) {
       return `ERROR: Komanda e panjohur: ${cmd}`;
   }
 }
+function sendResponse(client, rinfo, text) {
+  const buffer = Buffer.from(text, "utf8");
+  const delay = isAdmin(client.role) ? 0 : 500;
+
+  setTimeout(() => {
+    server.send(buffer, rinfo.port, rinfo.address, (err) => {
+      if (err) console.error("Error në dërgim:", err);
+    });
+    client.bytesOut += buffer.length;
+    totalBytesOut += buffer.length;
+  }, delay);
+}
