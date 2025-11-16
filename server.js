@@ -224,3 +224,4 @@ process.stdin.on("data", (data) => {
     printStats();
   }
 });
+server.bind(SERVER_PORT);
