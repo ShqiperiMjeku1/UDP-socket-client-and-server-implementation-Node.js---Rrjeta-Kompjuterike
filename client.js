@@ -8,7 +8,7 @@ const { SERVER_PORT, SERVER_IP } = require("./config");
 const clientSocket = dgram.createSocket("udp4");
 
 const clientId = process.argv[2] || "client1";
-const role = process.argv[3] || "read"; // "admin" ose "read"
+const role = process.argv[3] || "read";
 
 
 console.log(`Client ID: ${clientId}, role: ${role}`);
@@ -36,7 +36,6 @@ function sendToServer(commandLine) {
   });
 }
 
-// Trajtimi i inputit nga user-i
 function handleUserInput(line) {
   line = line.trim();
   if (!line) return;
@@ -72,7 +71,6 @@ function handleUserInput(line) {
     const filename = line.slice(6).trim();
     sendToServer(`INFO ${filename}`);
   } else {
-    // mesazh i thjeshtë tekstual
     sendToServer(`MSG ${line}`);
   }
 }
@@ -80,13 +78,11 @@ function handleUserInput(line) {
 
 rl.on("line", handleUserInput);
 
-// Mesazhet nga serveri
 clientSocket.on("message", (msg) => {
   const text = msg.toString("utf8");
 
 
   if (text.startsWith("FILEDATA ")) {
-    // format: FILEDATA filename base64...
     const parts = text.split(" ");
     const filename = parts[1];
     const base64Data = parts.slice(2).join(" ");
