@@ -195,3 +195,32 @@ setInterval(() => {
 }, 5_000);
 
 server.bind(SERVER_PORT);
+
+function printStats() {
+  const lines = [];
+  lines.push("===== SERVER STATS =====");
+  lines.push(`Koha: ${new Date().toISOString()}`);
+  lines.push(`Lidhje aktive: ${clients.size}`);
+  lines.push(`Total mesazhe: ${totalMessages}`);
+  lines.push(`Bytes pranuar: ${totalBytesIn}`);
+  lines.push(`Bytes dërguar: ${totalBytesOut}`);
+  lines.push("Klientët aktivë:");
+
+  for (const client of clients.values()) {
+    lines.push(
+      `- id=${client.id}, role=${client.role}, ip=${client.address}, msg=${client.messages}, in=${client.bytesIn}, out=${client.bytesOut}`
+    );
+  }
+
+  const output = lines.join("\n") + "\n\n";
+  console.log(output);
+  fs.appendFileSync(STATS_LOG_FILE, output);
+}
+
+process.stdin.setEncoding("utf8");
+process.stdin.on("data", (data) => {
+  const cmd = data.trim().toUpperCase();
+  if (cmd === "STATS") {
+    printStats();
+  }
+});
