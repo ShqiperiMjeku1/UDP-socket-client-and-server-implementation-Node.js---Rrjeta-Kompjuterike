@@ -194,8 +194,6 @@ setInterval(() => {
   }
 }, 5_000);
 
-server.bind(SERVER_PORT);
-
 function printStats() {
   const lines = [];
   lines.push("===== SERVER STATS =====");
@@ -224,4 +222,3 @@ process.stdin.on("data", (data) => {
     printStats();
   }
 });
-server.bind(SERVER_PORT);
