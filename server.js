@@ -143,3 +143,55 @@ function sendResponse(client, rinfo, text) {
     totalBytesOut += buffer.length;
   }, delay);
 }
+server.on("message", (msg, rinfo) => {
+  const key = getClientKey(rinfo);
+  const text = msg.toString("utf8").trim();
+  totalBytesIn += msg.length;
+  totalMessages++;
+
+  const parts = text.split("|");
+  if (parts.length < 3) {
+    const errMsg = "ERROR: Mesazh i pavlefshëm. Formati: clientId|role|komanda";
+    const buf = Buffer.from(errMsg, "utf8");
+    server.send(buf, rinfo.port, rinfo.address);
+    return;
+  }
+
+  const clientId = parts[0];
+  const role = parts[1];
+  const commandLine = parts.slice(2).join("|");
+
+  if (!registerClient(key, clientId, role, rinfo)) {
+    const buf = Buffer.from("ERROR: Serveri është i mbushur (MAX_CLIENTS)", "utf8");
+    server.send(buf, rinfo.port, rinfo.address);
+    return;
+  }
+
+  const client = clients.get(key);
+  client.lastSeen = Date.now();
+  client.messages++;
+  client.bytesIn += msg.length;
+
+  const response = handleCommand(client, commandLine);
+  sendResponse(client, rinfo, response);
+});
+
+server.on("listening", () => {
+  const address = server.address();
+  console.log(`✅ UDP server duke dëgjuar në port ${address.port}`);
+  console.log(`Përdor komandën "STATS" në këtë terminal për statistika.\n`);
+});
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, client] of clients.entries()) {
+    if (now - client.lastSeen > CLIENT_TIMEOUT_MS) {
+      console.log(
+        `⚠️ Lidhja me klientin ${client.id} (${client.address}:${client.port}) u mbyll për shkak të mosaktivitetit.`
+      );
+      clients.delete(key);
+    }
+  }
+}, 5_000);
+
+server.bind(SERVER_PORT);
