@@ -24,3 +24,40 @@ let totalBytesIn = 0;
 let totalBytesOut = 0;
 let totalMessages = 0;
 const messageLog = [];
+
+function getClientKey(rinfo) {
+  return `${rinfo.address}:${rinfo.port}`;
+}
+
+function registerClient(key, clientId, role, rinfo) {
+  if (!clients.has(key)) {
+    if (clients.size >= MAX_CLIENTS) {
+      return false;
+    }
+    clients.set(key, {
+      id: clientId,
+      role,
+      address: rinfo.address,
+      port: rinfo.port,
+      lastSeen: Date.now(),
+      messages: 0,
+      bytesIn: 0,
+      bytesOut: 0,
+    });
+    console.log(
+      `→ Klient i ri: id=${clientId}, role=${role}, ip=${rinfo.address}, port=${rinfo.port}`
+    );
+  }
+  return true;
+}
+
+function isAdmin(role) {
+  return role.toLowerCase() === "admin";
+}
+
+function hasPermission(role, command) {
+  const cmd = command.toUpperCase();
+  const readOnlyAllowed = ["LIST", "READ", "DOWNLOAD", "SEARCH", "INFO", "MSG"];
+  if (isAdmin(role)) return true;
+  return readOnlyAllowed.includes(cmd);
+}
